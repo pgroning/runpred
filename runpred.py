@@ -17,7 +17,8 @@ Options:\n\
 ## Get input from command line
 argv = sys.argv[1:] #input arguments
 
-try:  optlist, args = getopt.gnu_getopt(argv, "hd:t:w:", ["help", "distance=", "time="])
+try:  optlist, args = getopt.gnu_getopt(argv, "hd:t:w:", ["help", "distance=",\
+ "time=", "weight="])
   #print (args)
 except getopt.GetoptError as err:
   print (str(err)) #Print error msg
