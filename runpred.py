@@ -18,34 +18,49 @@ Options:\n\
  -w, --weight    : Weight (kg)")
     return
 
-## Get input from command line
-argv = sys.argv[1:] #input arguments
+#--------Main program--------------
+def main():
+  ## Get input from command line
+  argv = sys.argv[1:] #input arguments
 
-try:  optlist, args = getopt.gnu_getopt(argv, "hd:t:w:", ["help", "distance=",\
- "time=", "weight="])
-  #print (args)
-except getopt.GetoptError as err:
-  print (str(err)) #Print error msg
-  print ("type 'runpred --help' for more information")
-  sys.exit(2)
+  try:
+    optlist, args = getopt.gnu_getopt(argv, "hd:t:w:", ["help", "distance=",\
+    "time=", "weight="])
+  except getopt.GetoptError as err:
+    print (str(err)) #Print error msg
+    print ("type 'runpred --help' for more information")
+    sys.exit(2)
 
-for opt, arg in optlist:
+  distance = False
+  runtime = False
+  weight = False
+  for opt, arg in optlist:
     if opt in ("-h", "--help"):
-        usage()
-        sys.exit()
+      usage()
+      sys.exit()
     elif opt in ("-d", "--distance"):
-        distance = arg
+      distance = arg
     elif opt in ("-t", "--time"):
-        runtime = arg
+      runtime = arg
     elif opt in ("-w", "--weight"):
-        weight = arg
+      weight = arg
 
-if not "runtime" in locals():
-  print ("Running time must specified")
-  print ("type 'runpred --help' for more information")
-  sys.exit(2)
-else: # Convert time string to minutes:
-  a=time.strptime(runtime, "%H:%M:%S")
-  runtime_min=datetime.timedelta(hours=a.tm_hour, minutes=a.tm_min, \
-  seconds=a.tm_sec).seconds/60
-  print (runtime_min);
+  if not runtime:
+    print ("Running time must specified")
+    print ("type 'runpred --help' for more information")
+    sys.exit(2)
+  else: # Convert time string to minutes:
+    a=time.strptime(runtime, "%H:%M:%S")
+    runtime_min=datetime.timedelta(hours=a.tm_hour, minutes=a.tm_min, \
+    seconds=a.tm_sec).seconds/60
+    print (runtime_min);
+
+  if not distance:
+    print ("Running distance must be specified")
+    print ("type 'runpred --help' for more information")
+  else: # Calculate pace in km/min
+    speed_m_min = float(distance)*1000/runtime_min
+    print (speed_m_min)
+
+if __name__ == "__main__":
+  main()
