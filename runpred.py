@@ -6,6 +6,7 @@
 
 ## import libs
 import sys, getopt, time, datetime
+from math import exp
 
 ## Print help
 def usage():
@@ -53,14 +54,21 @@ def main():
     a=time.strptime(runtime, "%H:%M:%S")
     runtime_min=datetime.timedelta(hours=a.tm_hour, minutes=a.tm_min, \
     seconds=a.tm_sec).seconds/60
-    print (runtime_min);
 
   if not distance:
     print ("Running distance must be specified")
     print ("type 'runpred --help' for more information")
-  else: # Calculate pace in km/min
+    sys.exit(2)
+  else: # Calculate speed in km/min
     speed_m_min = float(distance)*1000/runtime_min
-    print (speed_m_min)
+
+  # VO2max according to Jack Daniels formula
+  VO2 = -4.6+0.182258*speed_m_min+0.000104*speed_m_min**2
+  percent_max = 0.8+0.1894393*exp(-0.012778*runtime_min) \
+  + 0.2989558*exp(-0.1932605*runtime_min)
+  VO2max = VO2/percent_max
+  print (VO2max)
+
 
 if __name__ == "__main__":
   main()
