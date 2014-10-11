@@ -62,13 +62,16 @@ def main():
   else: # Calculate speed in km/min
     speed_m_min = float(distance)*1000/runtime_min
 
+  VO2max = VO2max_fun(speed_m_min,runtime_min)
+  print (VO2max)
+
+def VO2max_fun(speed_m_min, runtime_min):
   # VO2max according to Jack Daniels formula
   VO2 = -4.6+0.182258*speed_m_min+0.000104*speed_m_min**2
   percent_max = 0.8+0.1894393*exp(-0.012778*runtime_min) \
   + 0.2989558*exp(-0.1932605*runtime_min)
   VO2max = VO2/percent_max
-  print (VO2max)
-
+  return VO2max
 
 if __name__ == "__main__":
   main()
