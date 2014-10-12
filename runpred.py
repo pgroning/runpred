@@ -72,13 +72,18 @@ def main():
   # -----------Prediction---------------------
   print ("----------Prediction-----------")
   pred_distance = 30
-  pred_time = runtime_min*pred_distance/float(distance)
-  delta = 0
-  while delta >= 0:
-    pred_VO2max = VO2max_fun(pred_distance,pred_time)
-    delta = pred_VO2max-VO2max
-    pred_time += 0.1
-    print (pred_time)
+  pred_time = runtime_min*pred_distance/distance
+  time_lo = pred_time*0.5
+  time_hi = pred_time*2.0
+  delta = abs(VO2max_fun(pred_distance, pred_time) - VO2max)
+  while delta > 1e-6:
+    pred_VO2max = VO2max_fun(pred_distance, pred_time)
+    if pred_VO2max < VO2max:
+      time_hi = pred_time
+    else:
+      time_lo = pred_time
+    pred_time = (time_lo+time_hi)/2.0
+    delta = abs(pred_VO2max-VO2max)
 
   hours = pred_time/60
   minutes = hours%1*60
