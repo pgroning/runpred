@@ -40,11 +40,11 @@ def main():
       usage()
       sys.exit()
     elif opt in ("-d", "--distance"):
-      distance = arg
+      distance = float(arg)
     elif opt in ("-t", "--time"):
       runtime = arg
     elif opt in ("-w", "--weight"):
-      weight = arg
+      weight = float(arg)
 
   if not runtime:
     print ("Running time must specified")
@@ -63,15 +63,36 @@ def main():
     #speed_m_min = float(distance)*1000/runtime_min
 
   # Calculate running pace
-  pace = runtime_min/float(distance) # min/km
+  pace = runtime_min/distance # min/km
   print ("Pace = {0}:{1} min/km".format(int(pace),int(pace % 1 * 60)))
   # Calculate VO2max
   VO2max = VO2max_fun(distance,runtime_min)
   print ("VO2max = {0}".format(VO2max))
 
+  # -----------Prediction---------------------
+  print ("----------Prediction-----------")
+  pred_distance = 30
+  pred_time = runtime_min*pred_distance/float(distance)
+  delta = 0
+  while delta >= 0:
+    pred_VO2max = VO2max_fun(pred_distance,pred_time)
+    delta = pred_VO2max-VO2max
+    pred_time += 0.1
+    print (pred_time)
+
+  hours = pred_time/60
+  minutes = hours%1*60
+  seconds = minutes%1*60
+  hours = str(int(hours))
+  if minutes < 10: minutes = "0"+str(int(minutes))
+  else: minutes = str(int(minutes))
+  if seconds < 10: seconds = "0"+str(round(seconds))
+  else: seconds = str(round(seconds))
+  print ("Time = {0}:{1}:{2} h:mm:ss".format(hours, minutes, seconds))
+
 def VO2max_fun(distance, runtime_min):
   # VO2max according to Jack Daniels formula
-  speed_m_min = float(distance)*1000/runtime_min
+  speed_m_min = distance*1000/runtime_min
   VO2 = -4.6+0.182258*speed_m_min+0.000104*speed_m_min**2
   percent_max = 0.8+0.1894393*exp(-0.012778*runtime_min) \
   + 0.2989558*exp(-0.1932605*runtime_min)
