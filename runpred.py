@@ -15,10 +15,10 @@ Prediction of running performance by calculating V02max.\n\n\
 Options:\n\
  -h, --help      : Show this help message and exit\n\
  -d, --distance  : Running distance (km)\n\
+ -dp,--dpred     : Distance for prediction (km)\n\
  -t, --time      : Running time (hh:mm:ss)\n\
  -w, --weight    : Weight (kg)")
     return
-
 #--------Main program--------------
 def main():
   ## Get input from command line
@@ -26,13 +26,14 @@ def main():
 
   try:
     optlist, args = getopt.gnu_getopt(argv, "hd:t:w:", ["help", "distance=",\
-    "time=", "weight="])
+    "dpred=", "time=", "weight="])
   except getopt.GetoptError as err:
     print (str(err)) #Print error msg
     print ("type 'runpred --help' for more information")
     sys.exit(2)
 
   distance = False
+  pred_distance = False
   runtime = False
   weight = False
   for opt, arg in optlist:
@@ -41,6 +42,8 @@ def main():
       sys.exit()
     elif opt in ("-d", "--distance"):
       distance = float(arg)
+    elif opt in ("--dpred"):
+      pred_distance = float(arg)
     elif opt in ("-t", "--time"):
       runtime = arg
     elif opt in ("-w", "--weight"):
@@ -64,14 +67,21 @@ def main():
 
   # Calculate running pace
   pace = runtime_min/distance # min/km
-  print ("Pace = {0}:{1} min/km".format(int(pace),int(pace % 1 * 60)))
+  minutes = str(int(pace))
+  seconds = pace % 1 * 60
+  if seconds < 10: seconds = "0"+str(round(seconds))
+  else: seconds = str(round(seconds))
+
+  print ("Pace = {0}:{1} [m:ss]/km".format(minutes,seconds))
   # Calculate VO2max
   VO2max = VO2max_fun(distance,runtime_min)
-  print ("VO2max = {0}".format(VO2max))
+  print ("VO2max = {0}".format(round(VO2max, 2)))
 
+  if not pred_distance:
+    sys.exit()
   # -----------Prediction---------------------
   print ("----------Prediction-----------")
-  pred_distance = 30
+  #pred_distance = 30
   pred_time = runtime_min*pred_distance/distance
   time_lo = pred_time*0.5
   time_hi = pred_time*2.0
@@ -93,7 +103,7 @@ def main():
   else: minutes = str(int(minutes))
   if seconds < 10: seconds = "0"+str(round(seconds))
   else: seconds = str(round(seconds))
-  print ("Time = {0}:{1}:{2} h:mm:ss".format(hours, minutes, seconds))
+  print ("Time = {0}:{1}:{2} [h:mm:ss]".format(hours, minutes, seconds))
 
 def VO2max_fun(distance, runtime_min):
   # VO2max according to Jack Daniels formula
