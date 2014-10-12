@@ -17,9 +17,8 @@ Options:\n\
  -d, --distance  : Running distance (km)\n\
  -dp,--dpred     : Distance for prediction (km)\n\
  -t, --time      : Running time (hh:mm:ss)\n\
- -w, --weight    : Weight (kg)")
-    return
-#--------Main program--------------
+ -w, --weight    : Weight (% of difference)")
+    return#--------Main program--------------
 def main():
   ## Get input from command line
   argv = sys.argv[1:] #input arguments
@@ -81,7 +80,8 @@ def main():
     sys.exit()
   # -----------Prediction---------------------
   print ("----------Prediction-----------")
-  #pred_distance = 30
+  if weight: # Ajust VO2max for weight change
+    VO2max = VO2max/(1.0+weight)
   pred_time = runtime_min*pred_distance/distance
   time_lo = pred_time*0.5
   time_hi = pred_time*2.0
