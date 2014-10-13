@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# This is the release v0.1.0 of runpred
+# This is the release v0.2.0 of runpred
 #
-# Created by P. Groningsson, 2014-10-10
+# Created by P. Groningsson, 2014-10-13
 
 ## import libs
 import sys, getopt, time, datetime
