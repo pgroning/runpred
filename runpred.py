@@ -105,6 +105,13 @@ def main():
   else: seconds = str(round(seconds))
   print ("Time = {0}:{1}:{2} [h:mm:ss]".format(hours, minutes, seconds))
 
+  pred_pace = pred_time/pred_distance
+  minutes = str(int(pred_pace))
+  seconds = pred_pace % 1 * 60
+  if seconds < 10: seconds = "0"+str(round(seconds))
+  else: seconds = str(round(seconds))
+  print ("Pace = {0}:{1} [m:ss]/km".format(minutes,seconds))
+
 def VO2max_fun(distance, runtime_min):
   # VO2max according to Jack Daniels formula
   speed_m_min = distance*1000/runtime_min
